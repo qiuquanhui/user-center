@@ -10,6 +10,10 @@ public enum ResponseCode {
 
     FAIL(500, "失败"),
 
+    NULL_PARAMETER(502, "失败"),
+
+    PARAMETER_ERROR(503, "失败"),
+
     UNAUTHORIZED(401, "未授权"),
 
     FORBIDDEN(403, "禁止"),
