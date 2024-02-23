@@ -69,4 +69,27 @@ public class userController {
 
     }
 
+    /**
+     *  登录
+     *
+     *  @Param  user
+     *  @return BaseResponse
+     */
+    @PostMapping("/login")
+    public BaseResponse login(@RequestBody UserVo userVo){
+        //1.校验
+        if (userVo == null){
+            throw new BusinessException(ResponseCode.PARAMETER_ERROR);
+        }
+
+        User safetyUser = userService.login(userVo);
+
+        if (safetyUser != null){
+            return Result.success("登录成功", safetyUser);
+        }
+
+        return Result.error("登录失败");
+
+    }
+
 }

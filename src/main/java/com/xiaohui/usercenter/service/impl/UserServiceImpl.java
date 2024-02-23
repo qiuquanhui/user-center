@@ -64,6 +64,41 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         return result;
     }
+
+    @Override
+    public User login(UserVo userVo) {
+        //1.校验
+        String userAccount = userVo.getUserAccount();
+        String password = userVo.getPassword();
+        if(StringUtils.isAnyBlank(userAccount, password)){
+            throw new BusinessException(4001,"账号密码不可为空");
+        }
+        //2.查询数据库
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userAccount",userAccount);
+        User user = userMapper.selectOne(queryWrapper);
+        if(user == null){
+            throw new BusinessException(4001,"账号不存在");
+        }
+        //3.对比
+        String userPassword = DigestUtil.md5Hex(password);
+        if(!user.getPassword().equals(userPassword)){
+            throw new BusinessException(4001,"密码错误");
+        }
+        User safetyUser = getSafetyUser(user);
+        //4.返回
+        return safetyUser;
+    }
+
+    private User getSafetyUser(User originalUser) {
+        User safetyUser = new User();
+
+        safetyUser.setUserName(originalUser.getUserName());
+        safetyUser.setUserRole(originalUser.getUserRole());
+        safetyUser.setStatus(originalUser.getStatus());
+
+        return safetyUser;
+    }
 }
 
 

@@ -22,6 +22,10 @@ public class Result {
         return new BaseResponse<T>(200,msg,null);
     }
 
+    public static <T> BaseResponse<T> success(String msg,T data){
+        return new BaseResponse<T>(200,msg,data);
+    }
+
     public static <T> BaseResponse<T> error(){
         return new BaseResponse<T>(500,"error");
     }

@@ -12,4 +12,6 @@ import com.xiaohui.usercenter.domain.vo.UserVo;
 public interface UserService extends IService<User> {
     //注册
     long register(UserVo userVo);
+    //登录
+    User login(UserVo userVo);
 }
