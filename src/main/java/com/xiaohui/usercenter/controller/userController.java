@@ -7,6 +7,7 @@ import com.xiaohui.usercenter.common.BaseResponse;
 import com.xiaohui.usercenter.common.ResponseCode;
 import com.xiaohui.usercenter.common.Result;
 import com.xiaohui.usercenter.domain.User;
+import com.xiaohui.usercenter.domain.vo.UserVo;
 import com.xiaohui.usercenter.exception.BusinessException;
 import com.xiaohui.usercenter.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,29 @@ public class userController {
         userService.save(user);
 
         return Result.success("测试新增成功");
+    }
+
+    /**
+     *  注册
+     *
+     *  @Param  user
+     *  @return BaseResponse
+    */
+    @PostMapping("/register")
+    public BaseResponse register(@RequestBody UserVo userVo){
+        //1.校验
+        if (userVo == null){
+            throw new BusinessException(ResponseCode.NULL_PARAMETER);
+        }
+
+        long result = userService.register(userVo);
+
+        if (result > 0){
+             return Result.success("注册成功");
+        }
+
+        return Result.error("注册失败");
+
     }
 
 }
