@@ -13,6 +13,9 @@ import com.xiaohui.usercenter.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  *
@@ -39,7 +42,7 @@ public class userController {
 
     //测试项目与数据库之间的连接
     @PostMapping("/test/add")
-    public BaseResponse add(@RequestBody User user){
+    public BaseResponse testAdd(@RequestBody User user){
 
         userService.save(user);
 
@@ -91,5 +94,114 @@ public class userController {
         return Result.error("登录失败");
 
     }
+
+
+    /**
+     *  新增
+     *
+     *  @Param  user
+     *  @return BaseResponse
+     */
+    @PostMapping("/add")
+    public BaseResponse add(@RequestBody User user){
+        //1.校验
+        if (user == null){
+            throw new BusinessException(ResponseCode.PARAMETER_ERROR);
+        }
+        boolean result = userService.save(user);
+        if (result){
+            return Result.success("新增成功");
+        }
+        return Result.error("新增失败");
+    }
+
+    /**
+     *  删除
+     *
+     *  @Param  user
+     *  @return BaseResponse
+     */
+    @DeleteMapping("/delete")
+    public BaseResponse delete(Long userId){
+        //1.校验
+        if (userId == null || userId == 0){
+            throw new BusinessException(ResponseCode.PARAMETER_ERROR);
+        }
+        boolean result = userService.removeById(userId);
+        if (result){
+            return Result.success("删除成功");
+        }
+        return Result.error("删除失败");
+    }
+
+    /**
+     *  修改
+     *
+     *  @Param  user
+     *  @return BaseResponse
+     */
+    @PutMapping("/update")
+    public BaseResponse update(@RequestBody User user){
+        //1.校验
+        if (user == null){
+            throw new BusinessException(ResponseCode.PARAMETER_ERROR);
+        }
+        boolean result = userService.updateById(user);
+        if (result){
+            return Result.success("修改成功");
+        }
+        return Result.error("修改失败");
+    }
+
+    /**
+     *  查询
+     *
+     *  @Param  user
+     *  @return BaseResponse
+     */
+    @GetMapping("/list")
+    public BaseResponse list(){
+
+        List<User> userList = userService.list();
+        //脱敏
+        ArrayList<User> users = new ArrayList<>();
+        for (User user : userList){
+            User newUser = new User();
+            newUser.setId(user.getId());
+            newUser.setUserName(user.getUserName());
+            newUser.setStatus(user.getStatus());
+            newUser.setUpdateTime(user.getUpdateTime());
+            newUser.setCreateTime(user.getCreateTime());
+            users.add(newUser);
+        }
+
+        return Result.success(users);
+    }
+
+    /**
+     *  分页查询
+     *
+     *  @Param  user
+     *  @return BaseResponse
+     */
+    @GetMapping("/page")
+    public BaseResponse page(){
+
+        List<User> userList = userService.list();
+        //脱敏
+        ArrayList<User> users = new ArrayList<>();
+        for (User user : userList){
+            User newUser = new User();
+            newUser.setId(user.getId());
+            newUser.setUserName(user.getUserName());
+            newUser.setStatus(user.getStatus());
+            newUser.setUpdateTime(user.getUpdateTime());
+            newUser.setCreateTime(user.getCreateTime());
+            users.add(newUser);
+        }
+
+        return Result.success(users);
+    }
+
 
 }
